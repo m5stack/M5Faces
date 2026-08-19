@@ -102,11 +102,11 @@ typedef enum {
  *   RELEASED → IDLE
  */
 typedef enum {
-    M5FACES_DIRECT_IDLE     = 0,  ///< 无事件（空闲期）/ No event (idle period)
-    M5FACES_DIRECT_PRESSED  = 1,  ///< 新按键按下 / New key press detected
-    M5FACES_DIRECT_RELEASED = 2,  ///< 全键释放 / All keys released
-    M5FACES_DIRECT_CHANGED  = 3,  ///< 按键组合变化（按住期间）/ Key combo changed while held
-    M5FACES_DIRECT_HELD     = 4,  ///< 键仍被按住（无新事件）/ Key still held (no new event)
+    M5FACES_DIRECT_IDLE     = 0,  // 无事件（空闲期）/ No event (idle period)
+    M5FACES_DIRECT_PRESSED  = 1,  // 新按键按下 / New key press detected
+    M5FACES_DIRECT_RELEASED = 2,  // 全键释放 / All keys released
+    M5FACES_DIRECT_CHANGED  = 3,  // 按键组合变化（按住期间）/ Key combo changed while held
+    M5FACES_DIRECT_HELD     = 4,  // 键仍被按住（无新事件）/ Key still held (no new event)
 } m5faces_direct_event_t;
 
 // ============================
@@ -171,27 +171,27 @@ typedef enum {
  *        modifier booleans are inverted for convenience: true = pressed.
  */
 typedef struct {
-    uint8_t raw[10];  ///< 原始 10 字节 / Raw 10 bytes
+    uint8_t raw[10];  // 原始 10 字节 / Raw 10 bytes
 
     /// 矩阵行 (3 行, Bytes 1-6) / Matrix rows (3 rows, Bytes 1-6)
     struct {
-        bool changed;       ///< bit7: 本次与上次不同 / Change flag
-        uint8_t row_index;  ///< bit6-4: 行索引 (0-3) / Row index
-        uint16_t key_bits;  ///< 10-bit: ((hi&0x03)<<8)|lo, 0=pressed
+        bool changed;       // bit7: 本次与上次不同 / Change flag
+        uint8_t row_index;  // bit6-4: 行索引 (0-3) / Row index
+        uint16_t key_bits;  // 10-bit: ((hi&0x03)<<8)|lo, 0=pressed
     } rows[3];
 
     /// 修饰键 (Bytes 7-8) / Modifier keys
     struct {
-        bool changed;  ///< bit7: 变化标志 / Change flag
-        bool aA;       ///< aA key pressed (active-low inverted)
-        bool alt;      ///< ALT key pressed
-        bool enter;    ///< Enter key pressed
-        bool sym;      ///< SYM key pressed
-        bool fn;       ///< FN key pressed
+        bool changed;  // bit7: 变化标志 / Change flag
+        bool aA;       // aA key pressed (active-low inverted)
+        bool alt;      // ALT key pressed
+        bool enter;    // Enter key pressed
+        bool sym;      // SYM key pressed
+        bool fn;       // FN key pressed
     } modifier;
 
-    uint8_t checksum;  ///< Byte 9 二补数校验和 / Two's-complement checksum byte
-    bool valid;        ///< 10 字节累加和为零 / All 10 bytes sum to zero
+    uint8_t checksum;  // Byte 9 二补数校验和 / Two's-complement checksum byte
+    bool valid;        // 10 字节累加和为零 / All 10 bytes sum to zero
 } m5faces_direct_data_t;
 
 // ============================
@@ -639,9 +639,9 @@ protected:
     uint8_t _key_prev = 0;
     bool _key_changed = false;
 
-    int _int_pin            = -1;     ///< INT/IRQ GPIO (-1 = 未配置 / not configured)
-    bool _int_mode          = false;  ///< true = 真实 GPIO 中断, false = 电平轮询
-    volatile bool _int_flag = false;  ///< ISR 置位的中断到达标志 / ISR-set arrival flag
+    int _int_pin            = -1;     // INT/IRQ GPIO (-1 = 未配置 / not configured)
+    bool _int_mode          = false;  // true = 真实 GPIO 中断, false = 电平轮询
+    volatile bool _int_flag = false;  // ISR 置位的中断到达标志 / ISR-set arrival flag
 
     // ── pollDirect() 状态 / pollDirect() state ───────────────
     static constexpr uint8_t M5FACES_DIRECT_QUEUE_CAP = 8;
@@ -653,12 +653,12 @@ protected:
         uint32_t hold_cnt               = 0;
     };
 
-    bool _direct_poll_active                     = false;  ///< 当前是否存在按住状态 / Whether any key is currently held
-    m5faces_direct_data_t _direct_poll_prev_data = {};  ///< 当前活动状态对应的最近一帧 / Latest frame of active state
-    uint32_t _direct_poll_hold_cnt               = 0;   ///< 当前活动状态持续计数 / Poll count in current active state
+    bool _direct_poll_active                     = false;  // 当前是否存在按住状态 / Whether any key is currently held
+    m5faces_direct_data_t _direct_poll_prev_data = {};     // 当前活动状态对应的最近一帧 / Latest frame of active state
+    uint32_t _direct_poll_hold_cnt               = 0;      // 当前活动状态持续计数 / Poll count in current active state
     m5faces_direct_data_t _direct_poll_last_event_prev_data =
-        {};                                         ///< 最近弹出事件关联的前一帧 / Previous frame for last popped event
-    uint32_t _direct_poll_last_event_hold_cnt = 0;  ///< 最近弹出事件关联的 hold 计数 / Hold count for last popped event
+        {};                                         // 最近弹出事件关联的前一帧 / Previous frame for last popped event
+    uint32_t _direct_poll_last_event_hold_cnt = 0;  // 最近弹出事件关联的 hold 计数 / Hold count for last popped event
     direct_queue_item_t _direct_queue[M5FACES_DIRECT_QUEUE_CAP] = {};
     uint8_t _direct_queue_head                                  = 0;
     uint8_t _direct_queue_count                                 = 0;
@@ -695,14 +695,14 @@ protected:
     enum class I2CMode : uint8_t {
         NONE = 0,
 #ifdef ARDUINO
-        WIRE,  ///< Arduino TwoWire (Wire)
+        WIRE,  // Arduino TwoWire (Wire)
 #endif
 #if M5FACES_HAS_M5UNIFIED_I2C
-        M5UNIFIED,  ///< M5Unified I2C_Class（支持运行时切频 / supports runtime freq change）
+        M5UNIFIED,  // M5Unified I2C_Class（支持运行时切频 / supports runtime freq change）
 #endif
 #ifndef ARDUINO
-        IDF_MASTER,      ///< 外部提供 dev_handle（不支持运行时切频 / no runtime freq change）
-        IDF_MASTER_BUS,  ///< 内部管理 dev_handle（支持运行时切频 / supports runtime freq change）
+        IDF_MASTER,      // 外部提供 dev_handle（不支持运行时切频 / no runtime freq change）
+        IDF_MASTER_BUS,  // 内部管理 dev_handle（支持运行时切频 / supports runtime freq change）
 #endif
     };
 
@@ -717,8 +717,8 @@ protected:
     /** @brief Arduino ISR 回调，仅置位中断标志 / Arduino ISR callback that only sets the interrupt flag. */
     static void IRAM_ATTR _arduino_isr(void *arg);
 #else
-    i2c_master_dev_handle_t _idf_dev = nullptr;  ///< 设备句柄（两种 IDF 模式共用）
-    i2c_master_bus_handle_t _idf_bus = nullptr;  ///< 总线句柄（仅 IDF_MASTER_BUS 模式）
+    i2c_master_dev_handle_t _idf_dev = nullptr;  // 设备句柄（两种 IDF 模式共用）
+    i2c_master_bus_handle_t _idf_bus = nullptr;  // 总线句柄（仅 IDF_MASTER_BUS 模式）
     /** @brief ESP-IDF GPIO ISR 回调，仅置位中断标志 / ESP-IDF GPIO ISR callback that only sets the interrupt flag. */
     static void IRAM_ATTR _gpio_isr_handler(void *arg);
 
