@@ -346,15 +346,14 @@ bool recover_pending_address()
 {
     AddressRecoveryRecord record;
     if (!load_address_recovery(record)) return true;
-    const bool record_valid = record.model >= M5Faces_Calculator3::MODEL_ID &&
-                              record.model <= M5Faces_Gamepad3::MODEL_ID && record.original >= 0x08 &&
-                              record.original < 0x78 && record.temporary >= 0x08 && record.temporary < 0x78 &&
-                              record.original != record.temporary && record.original != kBootAddress &&
-                              record.temporary != kBootAddress;
+    const bool record_valid =
+        record.model >= M5Faces_Calculator3::MODEL_ID && record.model <= M5Faces_Gamepad3::MODEL_ID &&
+        record.original >= 0x08 && record.original < 0x78 && record.temporary >= 0x08 && record.temporary < 0x78 &&
+        record.original != record.temporary && record.original != kBootAddress && record.temporary != kBootAddress;
     if (!record_valid) {
         set_status("Invalid address recovery record; clear NVS");
-        log_pt("FV_ERROR stage=address_recovery_record model=0x%02X original=0x%02X temporary=0x%02X",
-               record.model, record.original, record.temporary);
+        log_pt("FV_ERROR stage=address_recovery_record model=0x%02X original=0x%02X temporary=0x%02X", record.model,
+               record.original, record.temporary);
         return false;
     }
 
@@ -374,7 +373,7 @@ bool recover_pending_address()
     }
 
     M5FacesBase device;
-    uint8_t model = 0;
+    uint8_t model       = 0;
     const bool restored = device.begin(&M5.In_I2C, record.temporary, M5FACES_I2C_FREQ_STANDARD) == M5FACES_OK &&
                           device.getModelID(&model) == M5FACES_OK && model == record.model &&
                           device.setI2CAddress(record.original) == M5FACES_OK &&
@@ -549,13 +548,13 @@ bool find_faces()
     g_iap_pending_target = 0;
 
     IapPendingRecord pending;
-    bool pending_loaded = load_iap_pending(pending);
+    bool pending_loaded            = load_iap_pending(pending);
     const bool pending_shape_valid = pending.model >= M5Faces_Calculator3::MODEL_ID &&
                                      pending.model <= M5Faces_Gamepad3::MODEL_ID && pending.address >= 0x08 &&
                                      pending.address < 0x78 && pending.address != kBootAddress;
     const uint8_t pending_latest = latest_version(pending.model);
-    const bool migratable_target = pending.target == 0xF1 ||
-                                   (pending.model == M5Faces_Gamepad3::MODEL_ID && pending.target == 0x03);
+    const bool migratable_target =
+        pending.target == 0xF1 || (pending.model == M5Faces_Gamepad3::MODEL_ID && pending.target == 0x03);
     if (pending_loaded && pending_shape_valid && migratable_target && pending.target != pending_latest) {
         log_pt("IAP_PENDING_MIGRATE model=0x%02X old_target=0x%02X new_target=0x%02X addr=0x%02X", pending.model,
                pending.target, pending_latest, pending.address);
@@ -769,10 +768,8 @@ void draw_test_footer()
     }
 #else
     M5.Display.setTextColor(TFT_YELLOW);
-    M5.Display.drawString(g_model == M5Faces_Keyboard3::MODEL_ID ? "A Reset  B Mode  C API+Addr"
-                                                                      : "A Reset Keys  C API+Addr",
-                          160,
-                          224);
+    M5.Display.drawString(
+        g_model == M5Faces_Keyboard3::MODEL_ID ? "A Reset  B Mode  C API+Addr" : "A Reset Keys  C API+Addr", 160, 224);
 #endif
 }
 
@@ -895,9 +892,9 @@ bool run_common_api_validation(bool include_address_change = false)
     check("model_name", strcmp(M5FacesBase::modelName(g_model), model_name()) == 0 &&
                             strcmp(M5FacesBase::modelName(0xFF), "Unknown") == 0);
 
-    const char* expected_variant                    = latest_variant(g_model);
-    const faces_iap_fw_t latest_image               = faces_iap_find_firmware(g_model, expected_variant);
-    const faces_iap_firmware_info_t* latest_info    = faces_iap_get_firmware_info(latest_image);
+    const char* expected_variant                 = latest_variant(g_model);
+    const faces_iap_fw_t latest_image            = faces_iap_find_firmware(g_model, expected_variant);
+    const faces_iap_firmware_info_t* latest_info = faces_iap_get_firmware_info(latest_image);
     check("iap_firmware_catalog",
           faces_iap_get_firmware_count() == 3 && faces_iap_get_firmware_count() == FACES_IAP_FW_COUNT &&
               faces_iap_get_model_firmware_count(g_model) == 1 && latest_image != FACES_IAP_FW_INVALID &&
@@ -1002,14 +999,13 @@ bool run_common_api_validation(bool include_address_change = false)
                 break;
             }
         }
-        bool address_cycle = temporary_address != 0 &&
-                             save_address_recovery(g_model, g_device_addr, temporary_address);
+        bool address_cycle = temporary_address != 0 && save_address_recovery(g_model, g_device_addr, temporary_address);
         if (address_cycle) {
             address_cycle =
                 device->setI2CAddress(temporary_address) == M5FACES_OK && wait_for_address(temporary_address, 1000);
             uint8_t moved_address = 0;
-            address_cycle = device->getI2CAddress(&moved_address) == M5FACES_OK &&
-                            moved_address == temporary_address && address_cycle;
+            address_cycle = device->getI2CAddress(&moved_address) == M5FACES_OK && moved_address == temporary_address &&
+                            address_cycle;
             const bool restored =
                 device->setI2CAddress(g_device_addr) == M5FACES_OK && wait_for_address(g_device_addr, 1000);
             const bool record_cleared = restored && clear_address_recovery();
@@ -1063,7 +1059,7 @@ bool run_common_api_validation(bool include_address_change = false)
         struct {
             char text[4];
             uint8_t guard;
-        } tiny = {{}, 0xA5};
+        } tiny               = {{}, 0xA5};
         const int tiny_count = M5Faces_Gamepad3::gamepad3_code_parse(0x00, tiny.text, sizeof(tiny.text));
         check("gamepad_parser", count == 2 && strcmp(parsed, "UP+A") == 0 && tiny.text[3] == '\0' &&
                                     tiny.guard == 0xA5 && tiny_count == 8);
@@ -1074,12 +1070,11 @@ bool run_common_api_validation(bool include_address_change = false)
         struct {
             char text[4];
             uint8_t guard;
-        } tiny = {{}, 0xA5};
+        } tiny                  = {{}, 0xA5};
         uint8_t all_pressed[10] = {0x0A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
         M5Faces_Keyboard3::keyboard3_direct_parse(all_pressed, tiny.text, sizeof(tiny.text));
         check("keyboard_helpers", strcmp(M5Faces_Keyboard3::keyboard3_key_map(0, 9), "Q") == 0 &&
-                                      strcmp(parsed, "Q") == 0 &&
-                                      tiny.text[3] == '\0' && tiny.guard == 0xA5 &&
+                                      strcmp(parsed, "Q") == 0 && tiny.text[3] == '\0' && tiny.guard == 0xA5 &&
                                       M5Faces_Keyboard3::KEYMAP[0][M5Faces_Keyboard3::COL_DEFAULT] == 'q' &&
                                       M5Faces_Keyboard3::KEYMAP[31][M5Faces_Keyboard3::COL_SYM] == KEYBOARD3_KEY_ESC &&
                                       strcmp(M5Faces_Keyboard3::keyboard3_code_parse(KEYBOARD3_KEY_ESC), "ESC") == 0 &&
