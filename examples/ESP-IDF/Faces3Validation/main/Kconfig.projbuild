@@ -1,0 +1,30 @@
+menu "M5Faces3 validation example"
+
+choice M5FACES_EXAMPLE_HOST
+    prompt "M5Stack host"
+    default M5FACES_EXAMPLE_HOST_CORES3 if IDF_TARGET_ESP32S3
+    default M5FACES_EXAMPLE_HOST_CORE_BASIC
+
+    config M5FACES_EXAMPLE_HOST_CORE_BASIC
+        bool "M5Stack Core Basic (I2C0, SDA21, SCL22)"
+        depends on IDF_TARGET_ESP32
+
+    config M5FACES_EXAMPLE_HOST_CORE2
+        bool "M5Stack Core2 (I2C1, SDA21, SCL22)"
+        depends on IDF_TARGET_ESP32
+
+    config M5FACES_EXAMPLE_HOST_CORES3
+        bool "M5Stack CoreS3 (I2C1, SDA12, SCL11)"
+        depends on IDF_TARGET_ESP32S3
+endchoice
+
+config M5FACES_EXAMPLE_ENABLE_IAP
+    bool "Enable automatic update to the latest model firmware"
+    default y
+    help
+        Check the attached Faces3 firmware and update any recognizable older
+        version to the latest target: 0x03 for Calculator3/Keyboard3 and 0x04
+        for Gamepad3. Current firmware is not rewritten. A recoverable NVS
+        record protects the update against power loss.
+
+endmenu
