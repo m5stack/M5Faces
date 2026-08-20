@@ -59,13 +59,12 @@ void loop() {
 }
 ```
 
-See [Keyboard3.ino](examples/Arduino/Keyboard3/Keyboard3.ino) for the minimal
-example. [Faces3Validation](examples/Arduino/Faces3Validation) is the complete
+[Faces3Validation](examples/Arduino/Faces3Validation) is the complete
 three-model, three-host validation sketch shared by the PlatformIO project.
 
 ## PlatformIO Validation
 
-[`examples/PlatformIO/M5CoreBasic_Faces3`](examples/PlatformIO/M5CoreBasic_Faces3)
+[`examples/PlatformIO/M5Core_Faces3`](examples/PlatformIO/M5Core_Faces3)
 builds the shared Arduino validation sketch for Core Basic, Core2, and CoreS3.
 It checks controlled firmware, exercises register and configuration APIs, routes
 input through `M5FacesPoller`, and displays the matching English input screen.

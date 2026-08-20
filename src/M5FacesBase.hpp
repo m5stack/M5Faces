@@ -65,9 +65,9 @@
 // 错误码 / Error Codes
 // ============================
 typedef enum {
-    M5FACES_NO_DATA      = 1,   // 无待读事件（轮询模式：全零读取）/ No pending event (polling: all-zero read)
-    M5FACES_OK           = 0,   // 成功 / Success
-    M5FACES_FAIL         = -1,  // 通用失败 / General failure
+    M5FACES_NO_DATA = 1,  // 无待读事件（轮询模式：全零读取）/ No pending event (polling: all-zero read)
+    M5FACES_OK      = 0,  // 成功 / Success
+    M5FACES_FAIL    = -1,       // 通用失败 / General failure
     M5FACES_ERR_INVALID  = -2,  // 无效参数 / Invalid argument
     M5FACES_ERR_I2C_COMM = -3,  // I2C 通信错误 / I2C communication error
     M5FACES_ERR_NOT_INIT = -4,  // 未初始化 / Not initialized
@@ -653,11 +653,11 @@ protected:
         uint32_t hold_cnt               = 0;
     };
 
-    bool _direct_poll_active                     = false;  // 当前是否存在按住状态 / Whether any key is currently held
-    m5faces_direct_data_t _direct_poll_prev_data = {};     // 当前活动状态对应的最近一帧 / Latest frame of active state
-    uint32_t _direct_poll_hold_cnt               = 0;      // 当前活动状态持续计数 / Poll count in current active state
+    bool _direct_poll_active = false;  // 当前是否存在按住状态 / Whether any key is currently held
+    m5faces_direct_data_t _direct_poll_prev_data = {};  // 当前活动状态对应的最近一帧 / Latest frame of active state
+    uint32_t _direct_poll_hold_cnt = 0;  // 当前活动状态持续计数 / Poll count in current active state
     m5faces_direct_data_t _direct_poll_last_event_prev_data =
-        {};                                         // 最近弹出事件关联的前一帧 / Previous frame for last popped event
+        {};  // 最近弹出事件关联的前一帧 / Previous frame for last popped event
     uint32_t _direct_poll_last_event_hold_cnt = 0;  // 最近弹出事件关联的 hold 计数 / Hold count for last popped event
     direct_queue_item_t _direct_queue[M5FACES_DIRECT_QUEUE_CAP] = {};
     uint8_t _direct_queue_head                                  = 0;
